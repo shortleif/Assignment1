@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Pokémon Hangman</h1>
+    <h2>Guess the Pokémon!</h2>
+    <div class="hangman-container">
+        <div class="word-display">
+            <h3>{{ word }}</h3>
+        </div>
+    </div>
+
+    <div class="game-status">
+        <p>Attempts Left: {{ attempts_left }}</p>
+        <p>Guessed Letters: {{ guessed_letters }}</p>
+        {% if message %}
+            <p class="message">{{ message }}</p>
+        {% endif %}
+    </div>
+
+    {% if attempts_left > 0 and "_" in word %}
+        <form method="POST" action="{{ url_for('hangman') }}">
+            <div class="input-container">
+                <label for="guess">Enter a letter:</label>
+                <input type="text" id="guess" name="guess" maxlength="1" required>
+                <button type="submit" class="btn">Guess</button>
+            </div>
+        </form>
+    {% else %}
+        <div class="game-over">
+            <a href="{{ url_for('hangman') }}" class="btn">Play Again</a>
+        </div>
+    {% endif %}
+{% endblock %}
