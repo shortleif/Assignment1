@@ -2,7 +2,7 @@
 
 A Game Boy-inspired Pokémon Hangman web application built with Flask. Test your Pokémon knowledge by guessing the names of the original 151 Pokémon!
 
-![Pokémon Hangman Screenshot](static/preview.png)
+![Pokémon Hangman Screenshot](preview.png)
 
 ## Features
 
