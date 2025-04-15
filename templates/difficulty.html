@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <h1 class="display-5 text-center mb-3">Pokémon Hangman</h1>
+            
+            <div class="card shadow-sm">
+                <div class="card-header d-flex align-items-center py-2">
+                    <h5 class="mb-0">Select Difficulty</h5>
+                </div>
+                
+                <div class="card-body px-3 pt-3 pb-2">
+                    <div class="text-center mb-4">
+                        <p>Choose your difficulty level to start playing!</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="row g-4 justify-content-center">
+                            <div class="col-md-3">
+                                <div class="card difficulty-card h-100 border-success">
+                                    <div class="card-header bg-success text-white">
+                                        <h5 class="mb-0">Easy</h5>
+                                    </div>
+                                    <div class="card-body d-flex flex-column">
+                                        <div class="flex-grow-1">
+                                            <p>10 attempts</p>
+                                            <p>Perfect for beginners</p>
+                                        </div>
+                                        <a href="{{ url_for('hangman', difficulty='easy') }}" class="btn btn-success btn-lg w-100 mt-auto">Start</a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <div class="card difficulty-card h-100 border-primary">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0">Medium</h5>
+                                    </div>
+                                    <div class="card-body d-flex flex-column">
+                                        <div class="flex-grow-1">
+                                            <p>6 attempts</p>
+                                            <p>Balanced challenge</p>
+                                        </div>
+                                        <a href="{{ url_for('hangman', difficulty='medium') }}" class="btn btn-primary btn-lg w-100 mt-auto">Start</a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <div class="card difficulty-card h-100 border-danger">
+                                    <div class="card-header bg-danger text-white">
+                                        <h5 class="mb-0">Hard</h5>
+                                    </div>
+                                    <div class="card-body d-flex flex-column">
+                                        <div class="flex-grow-1">
+                                            <p>3 attempts</p>
+                                            <p>For Pokémon fans</p>
+                                        </div>
+                                        <a href="{{ url_for('hangman', difficulty='hard') }}" class="btn btn-danger btn-lg w-100 mt-auto">Start</a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <div class="card difficulty-card h-100 border-dark">
+                                    <div class="card-header bg-dark text-white">
+                                        <h5 class="mb-0">Extreme</h5>
+                                    </div>
+                                    <div class="card-body d-flex flex-column">
+                                        <div class="flex-grow-1">
+                                            <p>1 attempt</p>
+                                            <p>True Pokémon masters only!</p>
+                                        </div>
+                                        <a href="{{ url_for('hangman', difficulty='extreme') }}" class="btn btn-dark btn-lg w-100 mt-auto">Start</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
