@@ -34,12 +34,9 @@ A Game Boy-inspired Pokémon Hangman web application built with Flask. Test your
 
 ### Setup
 
-1. Clone the repository:
-git clone https://github.com/your-username/Assignment1.git cd Assignment1
-2. Create a virtual environment (recommended):
-python -m venv venv
-
-3. Activate the virtual environment:
+1. Clone the repository
+2. Create a virtual environment
+3. Activate the virtual environment
 - On Windows:
   ```
   venv\Scripts\activate
@@ -54,7 +51,6 @@ pip install -r requirements.txt
 
 5. Run the application:
 Write python main.py in the Terminal
-
 
 6. Open a browser and navigate to:
 http://127.0.0.1:5000/

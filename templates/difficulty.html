@@ -12,7 +12,14 @@
                 
                 <div class="card-body px-3 pt-3 pb-2">
                     <div class="text-center mb-4">
-                        <p>Choose your difficulty level to start playing!</p>
+                        <p>The game includes the original 151 Pokémon. Choose your difficulty to start playing!</p>
+                        
+                        {% if request.referrer and "change_difficulty" in request.referrer %}
+                            <div class="alert alert-info small mb-3">
+                                <strong>Note:</strong> Changing difficulty will reset your win/loss stats and progress counter.
+                                Your current progress is: Seen {{ session.get('encountered_pokemon', [])|length }} / 151 Pokémon.
+                            </div>
+                        {% endif %}
                     </div>
                     
                     <div class="text-center">

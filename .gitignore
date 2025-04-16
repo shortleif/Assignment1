@@ -33,7 +33,7 @@ flask_session/
 instance/
 .webassets-cache
 
-# Cached Pokémon images
+# Cached Pokémon images not uploaded to save download size
 static/pokemon_images/
 
 # OS files

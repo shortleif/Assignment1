@@ -1,8 +1,89 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="row mb-4">
-    <div class="col-md-12 text-center">
-        <h1 class="display-4">Welcome to my playground!</h1>
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+        <div class="text-center mb-5">
+            <h1 class="display-4 mb-4">Pokémon Hangman</h1>
+            <p class="lead">Test your Pokémon knowledge with this Game Boy-inspired Hangman game based on the original game!</p>
+        </div>
+        
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h2 class="h5 mb-0">About the Game</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-5 mb-3 mb-md-0 text-center">
+                        <img src="{{ url_for('static', filename='preview.png') }}" alt="Game Preview" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
+                    </div>
+                    <div class="col-md-7">
+                        <h3 class="h5 mb-3">Features:</h3>
+                        <ul>
+                            <li>Classic Hangman gameplay with Pokémon names</li>
+                            <li>All 151 original Pokémon from Generation I</li>
+                            <li>Four difficulty levels to test your skills</li>
+                            <li>Track your wins, losses, and Pokémon seen</li>
+                            <li>Official Pokémon artwork from PokéAPI</li>
+                            <li>Retro Game Boy-inspired design</li>
+                        </ul>
+                        <div class="mt-4 text-center">
+                            <a href="{{ url_for('hangman') }}" class="btn btn-primary btn-lg px-5">Play Now!</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header">
+                        <h2 class="h5 mb-0">How to Play</h2>
+                    </div>
+                    <div class="card-body">
+                        <ol>
+                            <li>Select your difficulty level (Easy, Medium, Hard, or Extreme)</li>
+                            <li>Guess one letter at a time to reveal the Pokémon name</li>
+                            <li>Each incorrect guess reduces your remaining attempts</li>
+                            <li>Try to guess the name before running out of attempts</li>
+                            <li>Press Enter or click "Next Round" to continue</li>
+                            <li>Can you see all 151 original Pokémon?</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header">
+                        <h2 class="h5 mb-0">Difficulty Levels</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h5 class="text-success">Easy: 10 attempts</h5>
+                            <p class="small mb-0">Perfect for beginners or younger players</p>
+                        </div>
+                        <div class="mb-3">
+                            <h5 class="text-primary">Medium: 6 attempts</h5>
+                            <p class="small mb-0">Balanced challenge for casual players</p>
+                        </div>
+                        <div class="mb-3">
+                            <h5 class="text-danger">Hard: 3 attempts</h5>
+                            <p class="small mb-0">For Pokémon fans who know their stuff</p>
+                        </div>
+                        <div>
+                            <h5 class="text-dark">Extreme: 1 attempt</h5>
+                            <p class="small mb-0">True Pokémon masters only!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-5">
+            <p class="small text-muted">This project is created for educational purposes.<br>Pokémon is a registered trademark of Nintendo, The Pokémon Company, and Game Freak.</p>
+        </div>
     </div>
 </div>
 {% endblock %}
