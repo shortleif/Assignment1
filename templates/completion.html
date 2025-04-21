@@ -1,44 +1,47 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10">
-        <h1 class="display-5 text-center mb-4">You've Seen 'Em All!</h1>
-        
-        <div class="card shadow-sm">
-            <div class="card-header d-flex align-items-center justify-content-between py-2">
-                <span class="badge difficulty-badge bg-success">
-                    Game Complete!
-                </span>
+  <div class="col-lg-8 col-md-10">
+    <h1 class="display-5 text-center mb-4">You've Seen 'Em All!</h1>
+
+    <div class="card shadow-sm">
+      <div
+        class="card-header d-flex align-items-center justify-content-between py-2"
+      >
+        <span class="badge difficulty-badge bg-success"> Game Complete! </span>
+      </div>
+
+      <div class="card-body px-4 pt-4 pb-3 text-center">
+        <div class="mb-4">
+          <h2 class="mb-3">Congratulations, Pokémon Master!</h2>
+          <p>You've encountered all {{ total_pokemon }} original Pokémon!</p>
+
+          <div class="row justify-content-center mt-4 mb-4">
+            <div class="col-auto me-2 text-center">
+              <h3 class="text-success">{{ caught_pokemon }}</h3>
+              <p>Caught</p>
             </div>
-            
-            <div class="card-body px-4 pt-4 pb-3 text-center">
-                <div class="mb-4">
-                    <img src="{{ url_for('static', filename='completion.png') }}" alt="Completion Trophy" class="img-fluid pokemon-image mb-4" style="max-height: 200px;">
-                    
-                    <h2 class="mb-3">Congratulations, Pokémon Master!</h2>
-                    <p>You've encountered all {{ total_pokemon }} original Pokémon!</p>
-                    
-                    <div class="row mt-4 mb-4">
-                        <div class="col-6 text-center">
-                            <h3 class="text-success">{{ caught_pokemon }}</h3>
-                            <p>Caught</p>
-                        </div>
-                        <div class="col-6 text-center">
-                            <h3 class="text-danger">{{ total_pokemon - caught_pokemon }}</h3>
-                            <p>Missed</p>
-                        </div>
-                    </div>
-                    
-                    <p>Your final score: {{ games_won }} wins, {{ games_lost }} losses</p>
-                    
-                    <div class="mt-4">
-                        <a href="{{ url_for('reset_session_full') }}" class="btn btn-lg btn-primary">Play Again</a>
-                        <a href="{{ url_for('home') }}" class="btn btn-lg btn-outline-secondary mt-2">Return Home</a>
-                    </div>
-                </div>
+            <div class="col-auto me-2 text-center">
+              <h3 class="text-danger">{{ total_pokemon - caught_pokemon }}</h3>
+              <p>Missed</p>
             </div>
+          </div>
+          <div class="row justify-content-center mt-4">
+            <div class="col-auto me-2">
+              <a href="{{ url_for('reset') }}" class="btn btn-lg btn-primary"
+                >Play Again</a
+              >
+            </div>
+            <div class="col-auto">
+              <a
+                href="{{ url_for('home') }}"
+                class="btn btn-lg btn-outline-secondary"
+                >Return Home</a
+              >
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}

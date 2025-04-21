@@ -1,12 +1,13 @@
 /* Game Boy Pokémon-inspired colors */
 :root {
-    --gameboy-darkest: #0f380f;  /* Darkest green */
-    --gameboy-dark: #306230;     /* Dark green */
-    --gameboy-light: #8bac0f;    /* Light green / olive */
-    --gameboy-lightest: #9bbc0f; /* Lightest green / yellow */
-    --gameboy-bg: #e8f8e0;       /* Background pale green */
-    --gameboy-blue: #0000fc;     /* Classic blue for buttons */
-    --gameboy-red: #e40058;      /* For accents and warnings */
+  --gameboy-darkest: #0f380f; /* Darkest green */
+  --gameboy-dark: #306230; /* Dark green */
+  --gameboy-light: #8bac0f; /* Light green / olive */
+  --gameboy-lightest: #9bbc0f; /* Lightest green / yellow */
+  --gameboy-bg: #e8f8e0; /* Background pale green */
+  --gameboy-blue: #0000fc; /* Classic blue for buttons */
+  --gameboy-red: #e40058; /* For accents and warnings */
+  --gameboy-yellow: #d3b55b;
 }
 
 /* Import pixel font from Google Fonts */
@@ -14,345 +15,445 @@
 
 /* ========== GLOBAL STYLES ========== */
 body {
-    margin: 0;
-    padding: 2.5rem 0 0 0;
-    min-height: 100vh;
-    background-color: var(--gameboy-bg);
-    background-image: 
-        linear-gradient(rgba(11, 56, 15, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(11, 56, 15, 0.05) 1px, transparent 1px);
-    background-size: 20px 20px;
-    position: relative;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    letter-spacing: -0.02em;
+  margin: 0;
+  padding: 2.5rem 0 0 0;
+  min-height: 100vh;
+  background-color: var(--gameboy-bg);
+  background-image: linear-gradient(rgba(11, 56, 15, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 56, 15, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  position: relative;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
 }
 
 /* Typography */
-h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6,
-button, input, select, textarea, p, span, div {
-    font-family: 'Press Start 2P', monospace;
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6,
+button,
+input,
+select,
+textarea,
+p,
+span,
+div {
+  font-family: 'Press Start 2P', monospace;
 }
 
-h1, .h1 { font-size: 1.8rem; line-height: 1.5; }
-h2, .h2 { font-size: 1.5rem; line-height: 1.5; }
-h3, .h3 { font-size: 1.3rem; line-height: 1.5; }
-h4, .h4, h5, .h5, h6, .h6 { font-size: 1.1rem; line-height: 1.5; }
+h1,
+.h1 {
+  font-size: 1.8rem;
+  line-height: 1.5;
+}
+h2,
+.h2 {
+  font-size: 1.5rem;
+  line-height: 1.5;
+}
+h3,
+.h3 {
+  font-size: 1.3rem;
+  line-height: 1.5;
+}
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+  font-size: 1.5rem;
+  line-height: 1.5;
+}
+
+p {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
 
 /* Main title styling */
 h1.display-5 {
-    font-size: 2.2rem !important;
-    text-align: center;
-    margin-bottom: 1.75rem !important;
-    padding: 0.5rem 0;
-    color: var(--gameboy-darkest);
-    text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+  font-size: 2.2rem !important;
+  text-align: center;
+  margin-bottom: 1.75rem !important;
+  padding: 0.5rem 0;
+  color: var(--gameboy-darkest);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+li {
+  font-size: 1.1rem;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
 }
 
 /* ========== CARD STYLES ========== */
 .card {
-    background-color: var(--gameboy-lightest);
-    border: none;
-    box-shadow: 0 5px 0 var(--gameboy-dark), 0 5px 15px rgba(0, 0, 0, 0.2);
-    margin-bottom: 2rem;
+  background-color: var(--gameboy-lightest);
+  border: none;
+  box-shadow: 0 5px 0 var(--gameboy-dark), 0 5px 15px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
 }
 
 .card-header {
-    background-color: var(--gameboy-dark);
-    border-bottom: none;
-    color: var(--gameboy-lightest);
-    padding: 0.75rem 1rem;
+  background-color: var(--gameboy-dark);
+  border-bottom: none;
+  color: var(--gameboy-lightest);
+  padding: 0.75rem 1rem;
 }
 
 .card-body {
-    padding: 1.5rem !important;
-    color: var(--gameboy-darkest);
+  padding: 1.5rem !important;
+  color: var(--gameboy-darkest);
 }
 
 /* Remove rounded corners */
-.card, .card-header, .card-body, .card-footer, 
-.btn, .badge, .alert, .input-group, .form-control {
-    border-radius: 0 !important;
+.card,
+.card-header,
+.card-body,
+.card-footer,
+.btn,
+.badge,
+.alert,
+.input-group,
+.form-control {
+  border-radius: 0 !important;
 }
 
 /* ========== BADGES ========== */
 .badge {
-    font-size: 0.8rem;
-    letter-spacing: -0.05em;
-    padding: 0.5em 0.7em;
-    box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+  font-size: 0.8rem;
+  letter-spacing: -0.05em;
+  padding: 0.5em 0.7em;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
 }
 
 .difficulty-badge {
-    font-size: 0.9rem !important;
-    padding: 0.4em 0.8em;
-    text-align: left;
-    border: 2px solid var(--gameboy-darkest);
-    box-shadow: 2px 2px 0 var(--gameboy-darkest);
+  font-size: 0.9rem !important;
+  padding: 0.4em 0.8em;
+  text-align: left;
+  border: 2px solid var(--gameboy-darkest);
+  box-shadow: 2px 2px 0 var(--gameboy-darkest);
 }
 
 .progress-badge {
-    background-color: var(--gameboy-darkest);
-    color: var(--gameboy-lightest);
-    border: 2px solid var(--gameboy-lightest);
-    font-size: 0.8rem !important;
-    padding: 0.4em 0.7em;
-    text-align: right;
+  background-color: var(--gameboy-darkest);
+  color: var(--gameboy-lightest);
+  border: 2px solid var(--gameboy-lightest);
+  font-size: 0.8rem !important;
+  padding: 0.4em 0.7em;
+  text-align: right;
 }
 
 /* ========== BUTTONS ========== */
 .btn {
-    font-size: 0.9rem;
-    padding: 0.6rem 0.9rem;
-    letter-spacing: -0.05em;
-    border: 2px solid var(--gameboy-darkest);
-    box-shadow: 2px 2px 0 var(--gameboy-darkest);
-    transition: all 0.2s ease;
+  font-size: 1.5rem;
+  padding: 0.6rem 0.9rem;
+  letter-spacing: -0.05em;
+  border: 2px solid var(--gameboy-darkest);
+  box-shadow: 2px 2px 0 var(--gameboy-darkest);
+  transition: all 0.2s ease;
 }
 
 .btn:hover {
-    transform: translate(1px, 1px);
-    box-shadow: 1px 1px 0 var(--gameboy-darkest);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--gameboy-darkest);
 }
 
 /* Button colors */
-.btn-primary, .bg-primary {
-    background-color: var(--gameboy-blue) !important;
-    color: white !important;
-    border-color: var(--gameboy-darkest);
+.btn-primary,
+.bg-primary {
+  background-color: var(--gameboy-blue) !important;
+  color: white !important;
+  border-color: var(--gameboy-darkest);
 }
 
-.btn-success, .bg-success {
-    background-color: var(--gameboy-light) !important;
-    color: var(--gameboy-darkest) !important;
-    border-color: var(--gameboy-darkest);
+.btn-success,
+.bg-success {
+  background-color: var(--gameboy-light) !important;
+  color: var(--gameboy-darkest) !important;
+  border-color: var(--gameboy-darkest);
 }
 
-.btn-danger, .bg-danger {
-    background-color: var(--gameboy-red) !important;
-    color: white !important;
-    border-color: var(--gameboy-darkest);
+.btn-danger,
+.bg-danger {
+  background-color: var(--gameboy-red) !important;
+  color: white !important;
+  border-color: var(--gameboy-darkest);
 }
 
-.btn-dark, .bg-dark {
-    background-color: var(--gameboy-darkest) !important;
-    color: white !important;
-    border-color: black;
+.btn-dark,
+.bg-dark {
+  background-color: var(--gameboy-darkest) !important;
+  color: white !important;
+  border-color: black;
 }
 
 /* Outline buttons */
 .btn-outline-secondary {
-    background-color: var(--gameboy-bg);
-    border-color: var(--gameboy-dark);
-    color: var(--gameboy-dark);
-    box-shadow: 2px 2px 0 var(--gameboy-dark);
+  background-color: var(--gameboy-bg);
+  border-color: var(--gameboy-dark);
+  color: var(--gameboy-dark);
+  box-shadow: 2px 2px 0 var(--gameboy-dark);
 }
 
 .btn-outline-secondary:hover {
-    background-color: var(--gameboy-dark);
-    color: white;
-    box-shadow: 1px 1px 0 var(--gameboy-dark);
+  background-color: var(--gameboy-dark);
+  color: white;
+  box-shadow: 1px 1px 0 var(--gameboy-dark);
 }
 
 .btn-outline-danger {
-    background-color: var(--gameboy-bg);
-    border-color: var(--gameboy-red);
-    color: var(--gameboy-red);
-    box-shadow: 2px 2px 0 var(--gameboy-red);
+  background-color: var(--gameboy-bg);
+  border-color: var(--gameboy-red);
+  color: var(--gameboy-red);
+  box-shadow: 2px 2px 0 var(--gameboy-red);
 }
 
 .btn-outline-danger:hover {
-    background-color: var(--gameboy-red);
-    color: white;
-    box-shadow: 1px 1px 0 var(--gameboy-red);
+  background-color: var(--gameboy-red);
+  color: white;
+  box-shadow: 1px 1px 0 var(--gameboy-red);
 }
 
 /* Next Round button */
 #next-round-btn {
-    font-size: 1rem;
-    padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  padding: 0.7rem 1.5rem;
 }
 
 /* Button group */
 .btn-group {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-    justify-content: center;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: center;
 }
 
 .btn-group .btn {
-    flex: 1;
-    padding: 8px 12px;
-    font-size: 0.85rem;
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 0.85rem;
 }
 
 /* ========== FORM ELEMENTS ========== */
 .form-control {
-    font-size: 0.9rem;
-    padding: 0.6rem;
-    height: auto;
-    border: 2px solid var(--gameboy-dark);
-    background-color: var(--gameboy-bg);
-    color: var(--gameboy-darkest);
+  font-size: 0.9rem;
+  padding: 0.6rem;
+  height: auto;
+  border: 2px solid var(--gameboy-dark);
+  background-color: var(--gameboy-bg);
+  color: var(--gameboy-darkest);
 }
 
 .input-group {
-    overflow: hidden;
-    box-shadow: 3px 3px 0 var(--gameboy-dark);
+  overflow: hidden;
+  box-shadow: 3px 3px 0 var(--gameboy-dark);
 }
 
 .input-group input {
-    letter-spacing: 0.1em;
-    padding: 0.75rem 1rem;
-    font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
 }
 
 /* ========== GAME ELEMENTS ========== */
 /* Word display */
 .text-center.mb-3.py-2.border-top.border-bottom {
-    background-color: var(--gameboy-bg);
-    border: 2px solid var(--gameboy-dark) !important;
-    padding: 0.75rem !important;
-    margin: 1.5rem 0 !important;
-    box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
-    letter-spacing: 2px;
-    word-spacing: 0.5em;
+  background-color: var(--gameboy-bg);
+  border: 2px solid var(--gameboy-dark) !important;
+  padding: 0.75rem !important;
+  margin: 1.5rem 0 !important;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+  letter-spacing: 2px;
+  word-spacing: 0.5em;
 }
 
 .text-center.mb-3.py-2.border-top.border-bottom h2 {
-    color: var(--gameboy-darkest);
-    font-weight: bold;
-    font-size: 1.8rem !important;
-    letter-spacing: 0.1em;
-    padding: 0.4rem 0;
+  color: var(--gameboy-darkest);
+  font-weight: bold;
+  font-size: 1.8rem !important;
+  letter-spacing: 0.1em;
+  padding: 0.4rem 0;
 }
 
 /* Game status boxes */
 .p-2.rounded.bg-light.text-center {
-    background: var(--gameboy-bg) !important;
-    border: 2px solid var(--gameboy-dark);
-    box-shadow: inset 0 0 6px rgba(0,0,0,0.05);
-    padding: 0.75rem !important;
-    color: var(--gameboy-darkest);
+  background: var(--gameboy-bg) !important;
+  border: 2px solid var(--gameboy-dark);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.05);
+  padding: 0.75rem !important;
+  color: var(--gameboy-darkest);
 }
 
 .p-2.rounded.bg-light.text-center small {
-    color: var(--gameboy-dark) !important;
-    font-size: 0.8rem;
+  color: var(--gameboy-dark) !important;
+  font-size: 0.8rem;
 }
 
 .p-2.rounded.bg-light.text-center strong {
-    font-size: 1.1rem;
+  font-size: 1.1rem;
 }
 
 /* Pokemon image */
 .pokemon-image {
-    max-height: 160px !important;
-    transition: all 0.5s ease-in-out;
-    padding: 10px;
-    background-color: var(--gameboy-bg);
-    border: 2px solid var(--gameboy-dark);
-    box-shadow: 3px 3px 0 var(--gameboy-darkest);
+  max-height: 160px !important;
+  transition: all 0.5s ease-in-out;
+  padding: 10px;
+  background-color: var(--gameboy-bg);
+  border: 2px solid var(--gameboy-dark);
+  box-shadow: 3px 3px 0 var(--gameboy-darkest);
+}
+
+/* Pokemon image base styles */
+.pokemon-image {
+  max-width: 200px;
+  transition: all 0.3s ease;
+}
+
+/* Fully visible - Easy mode and completed games */
+.pokemon-image-visible {
+  filter: brightness(100%);
+}
+
+/* Blurred - Medium mode */
+.pokemon-image-blurred {
+  filter: blur(8px);
+}
+
+/* Hidden - Hard and Extreme modes */
+.pokemon-image-hidden {
+  filter: brightness(0%);
+}
+
+/* Hover effects */
+.pokemon-image-blurred:hover {
+  filter: blur(5px); /* Slightly reduce blur on hover */
+}
+
+/* Show image on game completion regardless of mode */
+.game-complete .pokemon-image {
+  filter: brightness(100%) !important;
+  filter: blur none !important;
 }
 
 .pokemon-image-hidden {
-    filter: brightness(0);
-    opacity: 0.7;
-    background-color: transparent;
+  filter: brightness(0);
+  opacity: 0.7;
+  background-color: transparent;
 }
 
 .pokemon-image:not(.pokemon-image-hidden):hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 /* Score display */
 .col-3 h3 {
-    font-size: 2rem;
-    font-weight: 700;
+  font-size: 2rem;
+  font-weight: 700;
 }
 
 .text-success {
-    color: var(--gameboy-dark) !important;
+  color: var(--gameboy-dark) !important;
 }
 
 .text-danger {
-    color: var(--gameboy-red) !important;
+  color: var(--gameboy-red) !important;
 }
 
 /* ========== ALERTS ========== */
 .alert {
-    background-color: var(--gameboy-bg);
-    border: 2px solid var(--gameboy-dark);
-    color: var(--gameboy-darkest);
-    box-shadow: 2px 2px 0 var(--gameboy-darkest);
+  background-color: var(--gameboy-bg);
+  border: 2px solid var(--gameboy-dark);
+  color: var(--gameboy-darkest);
+  box-shadow: 2px 2px 0 var(--gameboy-darkest);
 }
 
 .alert p {
-    letter-spacing: 0;
-    line-height: 1.5;
-    font-size: 0.9rem !important;
-    margin-bottom: 0;
+  letter-spacing: 0;
+  line-height: 1.5;
+  color: var(--gameboy-bg);
+  font-size: 0.9rem !important;
+  margin-bottom: 0;
 }
 
 .alert-success {
-    border-color: var(--gameboy-dark);
+  border-color: var(--gameboy-dark);
+  background-color: var(--gameboy-dark);
 }
 
 .alert-danger {
-    border-color: var(--gameboy-red);
+  border-color: var(--gameboy-red);
+  background-color: var(--gameboy-red);
 }
 
 .alert-info {
-    border-color: var(--gameboy-blue);
+  border-color: var(--gameboy-blue);
+  background-color: var(--gameboy-blue);
+}
+
+.alert-warning {
+  border-color: var(--gameboy-yellow);
+  background-color: var(--gameboy-yellow);
 }
 
 /* ========== DIFFICULTY CARD ========== */
 .difficulty-card {
-    border: 2px solid var(--gameboy-dark);
-    box-shadow: 3px 3px 0 var(--gameboy-darkest);
-    transition: all 0.2s ease;
-    overflow: hidden;
-    margin-bottom: 1.5rem;
+  border: 2px solid var(--gameboy-dark);
+  box-shadow: 3px 3px 0 var(--gameboy-darkest);
+  transition: all 0.2s ease;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
 }
 
 .difficulty-card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 5px 5px 0 var(--gameboy-darkest);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--gameboy-darkest);
 }
 
 .difficulty-card .card-header {
-    border-bottom: 2px solid var(--gameboy-dark);
-    font-weight: bold;
+  border-bottom: 2px solid var(--gameboy-dark);
+  font-weight: bold;
 }
 
 .difficulty-card .card-body {
-    padding: 1.75rem 1.25rem !important;
+  padding: 1.75rem 1.25rem !important;
 }
 
 /* ========== SPACING UTILITIES ========== */
 .row.justify-content-center {
-    margin-bottom: 3rem;
+  margin-bottom: 3rem;
 }
 
 .mb-3 {
-    margin-bottom: 1.25rem !important;
+  margin-bottom: 1.25rem !important;
 }
 
 .row.g-4.justify-content-center {
-    margin-bottom: 2rem;
+  margin-bottom: 2rem;
 }
 
 /* Subtle backgrounds */
 .bg-success-subtle {
-    background-color: rgba(25, 135, 84, 0.1);
+  background-color: rgba(25, 135, 84, 0.1);
 }
 
 .bg-danger-subtle {
-    background-color: rgba(220, 53, 69, 0.1);
+  background-color: rgba(220, 53, 69, 0.1);
 }
 
 .bg-info-subtle {
-    background-color: rgba(13, 202, 240, 0.1);
+  background-color: rgba(13, 202, 240, 0.1);
 }

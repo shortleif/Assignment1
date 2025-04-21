@@ -15,10 +15,10 @@ app.secret_key = os.urandom(24)
 
 def load_pokemon_names():
     """
-    Load Pokémon names from a file.
+    Load the list Pokémon names from the txt file.
     
     Returns:
-        list: A list of Pokémon names. Returns a default list if file not found.
+        list: A list of Pokémon names. Returns a small default list if file not found as a fallback.
     """
     try:
         with open("static/pokemon.txt", "r") as f:
@@ -31,6 +31,14 @@ def load_pokemon_names():
 def get_pokemon_image(pokemon_name):
     """
     Get a Pokémon image from the PokéAPI or from local cache.
+    - The PokéAPI does not require credentials and is free to use.
+
+    Each Pokémon is saved as a PNG file in the static directory for future use to reduce API calls.
+    Subsequent requests use the cached image file instead of fetching it again.
+
+    Note that the Pokémon Nidoran has two genders and are named as Nidoran (male) and Nidoran (female).
+    Which is incompatible with the API. This function handles that by randomly choosing one of the a genders.
+    The evolved version of both genders are still available as normal.
     
     Args:
         pokemon_name (str): The name of the Pokémon to fetch
@@ -51,13 +59,14 @@ def get_pokemon_image(pokemon_name):
         if cache_file.exists():
             return f"/static/pokemon_images/{formatted_name}.png"
         
-        # Special case for Nidoran
+        # Handle special cases for API formatting
         api_formatted_name = formatted_name
         if formatted_name == "nidoran":
-            # Randomly choose male or female
+            # Randomly select M/F on first run
             gender = random.choice(["m", "f"])
             api_formatted_name = f"nidoran-{gender}"
-            # We still save it as nidoran.png
+        elif formatted_name == "mime":
+            api_formatted_name = "mr-mime"
         
         response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{api_formatted_name}")
         
@@ -90,60 +99,45 @@ def home():
 @app.route("/hangman", methods=["GET", "POST"])
 def hangman():
     """
-    Main hangman game route that handles:
-    - Starting a new game with selected difficulty
-    - Processing letter guesses
-    - Tracking game progress and statistics
+    Main hangman game route that handles all game states and difficulty management.
+
+    Session Variables:
+    - encountered_pokemon: List of all Pokémon shown to player in the game round
+    - caught_pokemon: Number of successfully guessed Pokémon at the end of the game
+    - rounds_won: Number of successful guesses
+    - rounds_lost: Number of failed attempts
+    - difficulty: Current game difficulty level
     
+    Handles the different difficulty levels and sets the number of attempts, defaults to medium.
+
+    Methods:
+    - GET without difficulty: Shows difficulty selection screen
+    - GET with difficulty: Starts new game or continues existing game
+    - POST: Processes each guess letter for active game, triggers win/loss conditions, updates session variables
+
     Returns:
         Rendered template for the appropriate game state
     """
     # Initialize session variables if they don't exist
     if "encountered_pokemon" not in session:
-        session["encountered_pokemon"] = []  # Track all Pokémon that have been shown
-    if "games_won" not in session:
-        session["games_won"] = 0
-    if "games_lost" not in session:
-        session["games_lost"] = 0
+        session["encountered_pokemon"] = []
+    if "rounds_won" not in session:
+        session["rounds_won"] = 0
+    if "rounds_lost" not in session:
+        session["rounds_lost"] = 0
     if "caught_pokemon" not in session:
-        session["caught_pokemon"] = []  # Track successfully guessed Pokémon
+        session["caught_pokemon"] = []
     
-    # Determine game difficulty and number of attempts
-    difficulty = request.args.get('difficulty')
-    if difficulty:
-        # Check if a previously selected difficulty exists
-        previous_difficulty = session.get("difficulty")
-        if previous_difficulty and previous_difficulty != difficulty:
-            # Reset stats when changing difficulty
-            session["games_won"] = 0
-            session["games_lost"] = 0
-            session["encountered_pokemon"] = []
-            # Keep caught_pokemon for collection purposes
-        
-        # Set the new difficultyq
-        if difficulty == 'easy':
-            attempts = 10
-        elif difficulty == 'medium':
-            attempts = 6
-        elif difficulty == 'hard':
-            attempts = 3
-        elif difficulty == 'extreme':
-            attempts = 1
-        else:
-            attempts = 6  # Default to medium
-        
-        session["difficulty"] = difficulty
+    # Set attempts based on difficulty
+    difficulty = request.args.get('difficulty', session.get("difficulty", "medium"))
+    if difficulty == 'easy':
+        attempts = 10
+    elif difficulty == 'hard':
+        attempts = 3
+    elif difficulty == 'extreme':
+        attempts = 1
     else:
-        # Use existing difficulty or default to medium
-        difficulty = session.get("difficulty", "medium")
-        if difficulty == 'easy':
-            attempts = 10
-        elif difficulty == 'hard':
-            attempts = 3
-        elif difficulty == 'extreme':
-            attempts = 1
-        else:
-            attempts = 6  # Medium
+        attempts = 6
     
     # Handle game initialization with difficulty
     if request.method == "GET" and 'difficulty' in request.args:
@@ -151,12 +145,16 @@ def hangman():
     
     # Show difficulty selection screen
     elif request.method == "GET":
-        return render_template("difficulty.html", 
-                              title="Pokémon Hangman",
-                              games_won=session.get("games_won", 0),
-                              games_lost=session.get("games_lost", 0))
+        template_vars = {
+            "title": "Pokémon Hangman",
+            "rounds_won": session.get("rounds_won", 0),
+            "rounds_lost": session.get("rounds_lost", 0),
+            "game_active": session.get("game_active", False),
+            "current_progress": "".join(session.get("display_word", [])) if session.get("game_active") else ""
+        }
+        return render_template("difficulty.html", **template_vars)
     
-    # Process the player's guess
+    # Process the guess
     elif request.method == "POST":
         return _process_guess(difficulty, attempts)
 
@@ -170,55 +168,39 @@ def _start_new_game(difficulty, attempts):
         attempts (int): Number of attempts allowed based on difficulty
         
     Returns:
-        Rendered template for a new game
+        Rendered template for new game or completion screen if all Pokémon encountered
     """
-    # Check if there's an active game that hasn't been completed
-    if (session.get("game_active", False) and 
-        session.get("word") and 
-        "_" in session.get("display_word", []) and 
-        session.get("attempts_left", 0) > 0 and
-        session.get("difficulty") == difficulty):
-        
-        # Continue with the existing game instead of starting a new one
-        template_vars = _get_template_vars(difficulty)
-        template_vars["game_active"] = True
-        return render_template("hangman.html", **template_vars)
-    
-    # Otherwise start a new game
     pokemon_list = load_pokemon_names()
     
-    # Filter out all previously encountered Pokémon
+    # Filter out previously encountered Pokémon
     available_pokemon = [p for p in pokemon_list if p not in session["encountered_pokemon"]]
     
-    # If all Pokémon have been encountered, show completion screen
+    # Show completion screen if all Pokémon encountered
     if not available_pokemon:
         return render_template("completion.html", 
-                              title="Pokémon Hangman - Complete!",
-                              caught_pokemon=len(session.get("caught_pokemon", [])),
-                              total_pokemon=len(pokemon_list),
-                              games_won=session.get("games_won", 0),
-                              games_lost=session.get("games_lost", 0))
+                            title="Pokémon Hangman - Complete!",
+                            caught_pokemon=len(session.get("caught_pokemon", [])),
+                            total_pokemon=len(pokemon_list),
+                            rounds_won=session.get("rounds_won", 0),
+                            rounds_lost=session.get("rounds_lost", 0))
     
-    # Select a new Pokémon from the available ones
+    # Select and setup new Pokémon
     pokemon = random.choice(available_pokemon)
-    
-    # Get the Pokémon image
     pokemon_image = get_pokemon_image(pokemon)
     
-    # Add to encountered Pokémon list
-    encountered_pokemon = session["encountered_pokemon"]
-    encountered_pokemon.append(pokemon)
-    session["encountered_pokemon"] = encountered_pokemon
-
-    # Initialize game session variables
-    session["word"] = pokemon
-    session["guessed_letters"] = []
-    session["attempts_left"] = attempts
-    session["display_word"] = ["_" if char.isalpha() else char for char in pokemon]
-    session["pokemon_image"] = pokemon_image
-    session["game_active"] = True
+    # Update session state
+    session.update({
+        "pokemon": pokemon,
+        "pokemon_image": pokemon_image,
+        "guessed_letters": [],
+        "attempts_left": attempts,
+        "display_word": ["_" if char.isalpha() else char for char in pokemon],
+        "game_active": True,
+        "difficulty": difficulty,
+        "encountered_pokemon": session["encountered_pokemon"] + [pokemon]
+    })
     
-    # Get template variables using helper function
+    # Render new game
     template_vars = _get_template_vars(difficulty)
     template_vars["game_active"] = True
     
@@ -237,7 +219,7 @@ def _process_guess(difficulty, attempts):
         Rendered template with updated game state
     """
     guess = request.form["guess"].lower()
-    word = session.get("word", "").lower()
+    pokemon = session.get("pokemon", "").lower()
     guessed_letters = session.get("guessed_letters", [])
     attempts_left = session.get("attempts_left", attempts)
     display_word = session.get("display_word", [])
@@ -248,53 +230,58 @@ def _process_guess(difficulty, attempts):
     # Validate the guess
     if not guess.isalpha() or len(guess) != 1:
         message = "Please enter a single letter."
+        alert_type = "info"
     elif guess in guessed_letters:
         message = f"You already guessed {guess}."
+        alert_type = "warning"
     else:
         # Process valid guess
         guessed_letters.append(guess)
 
-        if guess in word:
+        if guess in pokemon:
             # Handle correct guess
-            for i, letter in enumerate(word):
+            for i, letter in enumerate(pokemon):
                 if letter == guess:
                     # Capitalize first letter
                     if i == 0:
                         display_word[i] = letter.upper()
                     else:
                         display_word[i] = letter
-            message = f"Correct! {guess} is in the name of the Pokémon."
+            message = f"Correct! {guess} is in the name of the Pokémon. You have {attempts_left} attempts left."
+            alert_type = "success"
         else:
             # Handle incorrect guess
             attempts_left -= 1
             message = f"Incorrect! {guess.upper()} is not in the name of the Pokémon. You have {attempts_left} attempts left."
+            alert_type = "danger"
 
     # Update session variables
     session["guessed_letters"] = guessed_letters
     session["attempts_left"] = attempts_left
     session["display_word"] = display_word
+    session["alert_type"] = alert_type  # Add alert type to session
 
     # Check if player won
     if "_" not in display_word:
-        capitalized_word = word.capitalize()
+        capitalized_word = pokemon.capitalize()
         message = f"Congratulations! You guessed the Pokémon: {capitalized_word}."
-        session["games_won"] = session.get("games_won", 0) + 1
+        session["rounds_won"] = session.get("rounds_won", 0) + 1
         game_complete = True
         session["game_active"] = False  # Mark game as inactive
         session["message"] = message
         
         # Add to caught Pokémon collection if not already caught
-        if word.capitalize() not in session["caught_pokemon"]:
-            session["caught_pokemon"].append(word.capitalize())
+        if pokemon.capitalize() not in session["caught_pokemon"]:
+            session["caught_pokemon"].append(pokemon.capitalize())
 
         return render_template("hangman.html",
-                              **_get_template_vars(difficulty, game_complete=True, custom_word=word.capitalize()))
+                              **_get_template_vars(difficulty, game_complete=True, custom_word=pokemon.capitalize()))
     
     # Check if player lost
     elif attempts_left <= 0:
-        capitalized_word = word.capitalize()
+        capitalized_word = pokemon.capitalize()
         message = f"Game over! The Pokémon was: {capitalized_word}."
-        session["games_lost"] = session.get("games_lost", 0) + 1
+        session["rounds_lost"] = session.get("rounds_lost", 0) + 1
         game_complete = True
         session["game_active"] = False  # Mark game as inactive
         session["message"] = message
@@ -317,24 +304,36 @@ def _get_template_vars(difficulty, game_complete=False, custom_word=None):
     Returns:
         dict: Common template variables for rendering
     """
+
+        # Determine image visibility class based on difficulty
+    if game_complete:
+        image_class = "pokemon-image-visible"
+    elif difficulty == "easy":
+        image_class = "pokemon-image-visible"
+    elif difficulty == "medium":
+        image_class = "pokemon-image-blurred"
+    else:  # hard and extreme
+        image_class = "pokemon-image-hidden"
+
     # Base variables always needed
     template_vars = {
         "title": "Pokémon Hangman",
-        "games_won": session.get("games_won", 0),
-        "games_lost": session.get("games_lost", 0),
+        "rounds_won": session.get("rounds_won", 0),
+        "rounds_lost": session.get("rounds_lost", 0),
         "difficulty": difficulty,
         "progress": len(session.get("encountered_pokemon", [])),
         "pokemon_image": session.get("pokemon_image"),
-        "image_hidden": not game_complete,
+                "pokemon_image": session.get("pokemon_image"),
+        "image_class": image_class,
         "game_complete": game_complete
     }
     
-    # Word display handling
+    # Pokémon name display handling
     if custom_word:
-        template_vars["word"] = custom_word
+        template_vars["pokemon"] = custom_word
     else:
         display_word = session.get("display_word", [])
-        template_vars["word"] = " ".join(display_word)
+        template_vars["pokemon"] = " ".join(display_word)
     
     # Add guessed letters if they exist
     guessed_letters = session.get("guessed_letters", [])
@@ -349,6 +348,7 @@ def _get_template_vars(difficulty, game_complete=False, custom_word=None):
     # Add message if it exists in session
     if "message" in session:
         template_vars["message"] = session["message"]
+        template_vars["alert_type"] = session.get("alert_type", "info")
     
     return template_vars
 
@@ -369,27 +369,35 @@ def reset():
 @app.route("/change_difficulty")
 def change_difficulty():
     """
-    Change difficulty without resetting progress.
-    Only clears the current game state but keeps win/loss stats and encountered Pokémon.
+    Handle difficulty change requests.
+    Resets all game state and shows difficulty selection.
+    """
+    # Clear all game state
+    session.clear()
+    
+    # Show fresh difficulty selection screen
+    template_vars = {
+        "title": "Select Difficulty",
+        "rounds_won": 0,
+        "rounds_lost": 0,
+        "game_active": False
+    }
+    return render_template("difficulty.html", **template_vars)
+
+
+@app.route("/restart")
+def restart():
+    """
+    Restart the game while preserving difficulty.
+    Resets scores and progress but keeps current difficulty setting.
     
     Returns:
-        Redirect to the difficulty selection screen
+        Redirect to start a new game with the same difficulty
     """
-    # Keep most session values but clear the active game
     current_difficulty = session.get("difficulty", "medium")
-    session["game_active"] = False
-    
-    # Clear just the current game state
-    if "word" in session:
-        session.pop("word")
-    if "display_word" in session:
-        session.pop("display_word")
-    if "guessed_letters" in session:
-        session.pop("guessed_letters")
-    if "attempts_left" in session:
-        session.pop("attempts_left")
-    
-    return redirect(url_for('hangman'))
+    session.clear()
+    session["difficulty"] = current_difficulty
+    return redirect(url_for('hangman', difficulty=current_difficulty))
 
 
 if __name__ == "__main__":

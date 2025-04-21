@@ -1,150 +1,168 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-xl-6 col-lg-8 col-md-10">
+    <h1 class="display-5 text-center mb-3">Pokémon Hangman</h1>
 
-{% block content %}
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-10">
-            <h1 class="display-5 text-center mb-3">Pokémon Hangman</h1>
-            
-            <div class="card shadow-sm">
-                <div class="card-header d-flex align-items-center justify-content-between py-2">
-                    <span class="badge difficulty-badge {% if difficulty == 'easy' %}bg-success{% elif difficulty == 'hard' %}bg-danger{% elif difficulty == 'extreme' %}bg-dark{% else %}bg-primary{% endif %}">
-                        {{ difficulty|default('medium')|capitalize }} Mode: 
-                        {% if difficulty == 'easy' %}10{% elif difficulty == 'hard' %}3{% elif difficulty == 'extreme' %}1{% else %}6{% endif %} Attempts
-                    </span>
-                    <span class="badge progress-badge">
-                        Seen: {{ progress|default(0) }} / 151
-                    </span>
-                </div>
-                
-                <div class="card-body px-3 pt-3 pb-2">
-                    <!-- Stats and Image Row -->
-                    <div class="row align-items-center mb-3">
-                        <!-- Win/Loss Stats -->
-                        <div class="col-3 text-center">
-                            <p class="mb-1 small text-muted">Wins</p>
-                            <h3 class="mb-0 text-success">{{ games_won }}</h3>
-                        </div>
-                        
-                        <!-- Pokemon Image -->
-                        <div class="col-6 text-center">
-                            {% if pokemon_image %}
-                                <img 
-                                    src="{{ pokemon_image }}" 
-                                    alt="Pokémon" 
-                                    class="img-fluid rounded pokemon-image {% if image_hidden %}pokemon-image-hidden{% endif %}"
-                                    style="max-height: 160px;"
-                                >
-                            {% else %}
-                                <div class="p-4 bg-light rounded">?</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="col-3 text-center">
-                            <p class="mb-1 small text-muted">Losses</p>
-                            <h3 class="mb-0 text-danger">{{ games_lost }}</h3>
-                        </div>
-                    </div>
-                    
-                    <!-- Word Display -->
-                    <div class="text-center mb-3 py-2 border-top border-bottom">
-                        <h2 class="mb-0">{{ word }}</h2>
-                    </div>
-                    
-                    <!-- Game Status -->
-                    <div class="row mb-3">
-                        <div class="col-6 px-1">
-                            <div class="p-2 rounded bg-light text-center">
-                                <small class="d-block text-muted">Attempts Left</small>
-                                <strong>{{ attempts_left }}</strong>
-                            </div>
-                        </div>
-                        <div class="col-6 px-1">
-                            <div class="p-2 rounded bg-light text-center">
-                                <small class="d-block text-muted">Guessed letters:</small>
-                                <strong>{{ guessed_letters }}</strong>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Message Display -->
-                    {% if message and message != "" %}
-                        <div class="alert alert-{% if 'Correct' in message or 'Congratulations' in message %}success{% elif 'Game over' in message %}danger{% else %}info{% endif %} py-2 mb-3">
-                            <p class="mb-0 small text-center"><strong>{{ message }}</strong></p>
-                        </div>
-                    {% endif %}
-                    
-                    <!-- Input Form - Only shown during active gameplay -->
-                    {% if attempts_left > 0 and "_" in word %}
-                        <form method="POST" action="{{ url_for('hangman') }}" class="mb-3">
-                            <div class="input-group">
-                                <!-- Update the input field to prevent autocomplete/caching -->
-                                <input type="text" 
-                                       id="guess" 
-                                       name="guess" 
-                                       class="form-control" 
-                                       maxlength="1" 
-                                       required 
-                                       autofocus 
-                                       pattern="[A-Za-z]"
-                                       placeholder="Enter a letter"
-                                       autocomplete="off">
-                                <button type="submit" class="btn btn-primary">Guess</button>
-                            </div>
-                        </form>
-                    {% else %}
-                        <!-- Next Round Button - Only shown when game is complete -->
-                        <div class="text-center mb-3">
-                            <a href="{{ url_for('hangman', difficulty=difficulty) }}" id="next-round-btn" class="btn btn-sm btn-primary">Next Round!</a>
-                        </div>
-                    {% endif %}
-                    
-                    <!-- Game Controls - Always visible -->
-                    <div class="text-center mt-3 pt-3 border-top">
-                        <div class="btn-group">
-                            <a href="{{ url_for('change_difficulty') }}" class="btn btn-sm btn-outline-secondary">Change Difficulty</a>
-                            <a href="{{ url_for('reset') }}" class="btn btn-sm btn-outline-danger">Reset Everything</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="card shadow-sm">
+      <div
+        class="card-header d-flex align-items-center justify-content-between py-2"
+      >
+        <span
+          class="badge difficulty-badge {% if difficulty == 'easy' %}bg-success{% elif difficulty == 'hard' %}bg-danger{% elif difficulty == 'extreme' %}bg-dark{% else %}bg-primary{% endif %}"
+        >
+          {{ difficulty|default('medium')|capitalize }} Mode: {% if difficulty
+          == 'easy' %}10{% elif difficulty == 'hard' %}3{% elif difficulty ==
+          'extreme' %}1{% else %}6{% endif %} Attempts
+        </span>
+        <span class="badge progress-badge">
+          Seen: {{ progress|default(0) }} / 151
+        </span>
+      </div>
+
+      <div class="card-body px-3 pt-3 pb-2">
+        <!-- Stats and Image Row -->
+        <div class="row align-items-center mb-3">
+          <!-- Win/Loss Stats -->
+          <div class="col-3 text-center">
+            <p class="mb-1 small text-muted">Wins</p>
+            <h3 class="mb-0 text-success">{{ rounds_won }}</h3>
+          </div>
+
+          <!-- Pokemon Image -->
+          <div class="col-6 text-center">
+            {% if pokemon_image %}
+            <img
+              src="{{ pokemon_image }}"
+              alt="Pokémon"
+              class="img-fluid rounded pokemon-image {{ image_class }}"
+              style="max-height: 160px"
+            />
+            {% else %}
+            <div class="p-4 bg-light rounded">?</div>
+            {% endif %}
+          </div>
+
+          <div class="col-3 text-center">
+            <p class="mb-1 small text-muted">Losses</p>
+            <h3 class="mb-0 text-danger">{{ rounds_lost }}</h3>
+          </div>
         </div>
-    </div>
 
-    <!-- JavaScript for Enter key functionality -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Find elements we need to work with
-            const nextRoundBtn = document.getElementById('next-round-btn');
-            const guessForm = document.querySelector('form');
-            const guessInput = document.getElementById('guess');
-            
-            // Set up Enter key handling based on what's visible
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    // If the next round button is visible and game is complete
-                    if (nextRoundBtn && nextRoundBtn.offsetParent !== null) {
-                        event.preventDefault();
-                        // Navigate to the next round with the current difficulty
-                        window.location.href = nextRoundBtn.getAttribute('href');
-                    }
-                    // Let the form's default submit action handle the input field
-                }
-            });
-            
-            // Update next round button text if it exists
-            if (nextRoundBtn) {
-                nextRoundBtn.innerHTML = "Next Round! (or press Enter)";
-            }
-            
-            // Ensure the guess input field is cleared and focused when the form is visible
-            if (guessForm && guessInput) {
-                // Clear any previous value
-                guessInput.value = '';
-                // Focus the input field after a short delay to ensure the DOM is ready
-                setTimeout(function() {
-                    guessInput.focus();
-                }, 100);
-            }
-        });
-    </script>
+        <!-- pokemon Display -->
+        <div class="text-center mb-3 py-2 border-top border-bottom">
+          <h2 class="mb-0">{{ pokemon }}</h2>
+        </div>
+
+        <!-- Game Status -->
+        <div class="row mb-3">
+          <div class="col-6 px-1">
+            <div class="p-2 rounded bg-light text-center">
+              <small class="d-block text-muted">Attempts Left</small>
+              <strong>{{ attempts_left }}</strong>
+            </div>
+          </div>
+          <div class="col-6 px-1">
+            <div class="p-2 rounded bg-light text-center">
+              <small class="d-block text-muted">Guessed letters:</small>
+              <strong>{{ guessed_letters }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message Display -->
+        {% if message and message != "" %}
+        <div class="alert alert-{{ alert_type }} text-center">
+          <p class="mb-0 small text-center"><strong>{{ message }}</strong></p>
+        </div>
+        {% endif %}
+
+        <!-- Input Form - Only shown during active gameplay -->
+        {% if attempts_left > 0 and "_" in pokemon %}
+        <form method="POST" action="{{ url_for('hangman') }}" class="mb-3">
+          <div class="input-group">
+            <!-- Update the input field to prevent autocomplete/caching -->
+            <input
+              type="text"
+              id="guess"
+              name="guess"
+              class="form-control"
+              maxlength="1"
+              required
+              autofocus
+              pattern="[A-Za-z]"
+              placeholder="Enter a letter"
+              autocomplete="off"
+            />
+            <button type="submit" class="btn btn-primary">Guess</button>
+          </div>
+        </form>
+        {% else %}
+        <!-- Next Round Button - Only shown when game is complete -->
+        <div class="text-center mb-3">
+          <a
+            href="{{ url_for('hangman', difficulty=difficulty) }}"
+            id="next-round-btn"
+            class="btn btn-sm btn-primary"
+            >Next Round!</a
+          >
+        </div>
+        {% endif %}
+
+        <!-- Game Controls - Always visible -->
+        <div class="text-center mt-3 pt-3 border-top">
+          <div class="btn-group">
+            <a
+              href="{{ url_for('change_difficulty', difficulty=difficulty) }}"
+              class="btn btn-sm btn-outline-secondary"
+              >Change Difficulty and Reset</a
+            >
+            <a
+              href="{{ url_for('restart') }}"
+              class="btn btn-sm btn-outline-danger"
+              >Restart</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript for Enter key functionality -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Find elements we need to work with
+    const nextRoundBtn = document.getElementById('next-round-btn');
+    const guessForm = document.querySelector('form');
+    const guessInput = document.getElementById('guess');
+
+    // Set up Enter key handling based on what's visible
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter') {
+        // If the next round button is visible and game is complete
+        if (nextRoundBtn && nextRoundBtn.offsetParent !== null) {
+          event.preventDefault();
+          // Navigate to the next round with the current difficulty
+          window.location.href = nextRoundBtn.getAttribute('href');
+        }
+        // Let the form's default submit action handle the input field
+      }
+    });
+
+    // Update next round button text if it exists
+    if (nextRoundBtn) {
+      nextRoundBtn.innerHTML = 'Next Round! (or press Enter)';
+    }
+
+    // Ensure the guess input field is cleared and focused when the form is visible
+    if (guessForm && guessInput) {
+      // Clear any previous value
+      guessInput.value = '';
+      // Focus the input field after a short delay to ensure the DOM is ready
+      setTimeout(function () {
+        guessInput.focus();
+      }, 100);
+    }
+  });
+</script>
 {% endblock %}
