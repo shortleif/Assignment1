@@ -3,6 +3,7 @@
   <div class="col-xl-6 col-lg-8 col-md-10">
     <h1 class="display-5 text-center mb-3">Pokémon Hangman</h1>
 
+    <!-- Header section for difficulty and progress -->
     <div class="card shadow-sm">
       <div
         class="card-header d-flex align-items-center justify-content-between py-2"
@@ -48,7 +49,7 @@
           </div>
         </div>
 
-        <!-- pokemon Display -->
+        <!-- Name Display -->
         <div class="text-center mb-3 py-2 border-top border-bottom">
           <h2 class="mb-0">{{ pokemon }}</h2>
         </div>
@@ -57,13 +58,13 @@
         <div class="row mb-3">
           <div class="col-6 px-1">
             <div class="p-2 rounded bg-light text-center">
-              <small class="d-block text-muted">Attempts Left</small>
+              <p class="d-block text-muted">Attempts Left</p>
               <strong>{{ attempts_left }}</strong>
             </div>
           </div>
           <div class="col-6 px-1">
             <div class="p-2 rounded bg-light text-center">
-              <small class="d-block text-muted">Guessed letters:</small>
+              <p class="d-block text-muted">Guessed letters:</p>
               <strong>{{ guessed_letters }}</strong>
             </div>
           </div>
@@ -76,11 +77,10 @@
         </div>
         {% endif %}
 
-        <!-- Input Form - Only shown during active gameplay -->
+        <!-- Input Form  -->
         {% if attempts_left > 0 and "_" in pokemon %}
         <form method="POST" action="{{ url_for('hangman') }}" class="mb-3">
           <div class="input-group">
-            <!-- Update the input field to prevent autocomplete/caching -->
             <input
               type="text"
               id="guess"
@@ -108,7 +108,7 @@
         </div>
         {% endif %}
 
-        <!-- Game Controls - Always visible -->
+        <!-- Game Controls -->
         <div class="text-center mt-3 pt-3 border-top">
           <div class="btn-group">
             <a
@@ -131,7 +131,6 @@
 <!-- JavaScript for Enter key functionality -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    // Find elements we need to work with
     const nextRoundBtn = document.getElementById('next-round-btn');
     const guessForm = document.querySelector('form');
     const guessInput = document.getElementById('guess');
@@ -142,10 +141,8 @@
         // If the next round button is visible and game is complete
         if (nextRoundBtn && nextRoundBtn.offsetParent !== null) {
           event.preventDefault();
-          // Navigate to the next round with the current difficulty
           window.location.href = nextRoundBtn.getAttribute('href');
         }
-        // Let the form's default submit action handle the input field
       }
     });
 
@@ -156,7 +153,6 @@
 
     // Ensure the guess input field is cleared and focused when the form is visible
     if (guessForm && guessInput) {
-      // Clear any previous value
       guessInput.value = '';
       // Focus the input field after a short delay to ensure the DOM is ready
       setTimeout(function () {
