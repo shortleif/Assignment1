@@ -34,7 +34,7 @@ instance/
 .webassets-cache
 
 # Cached Pokémon images not uploaded to save download size
-static/pokemon_images/
+app/static/pokemon_images/
 
 # OS files
 .DS_Store
