@@ -79,7 +79,7 @@
 
         <!-- Input Form  -->
         {% if attempts_left > 0 and "_" in pokemon %}
-        <form method="POST" action="{{ url_for('hangman') }}" class="mb-3">
+        <form method="POST" action="{{ url_for('bp.hangman') }}" class="mb-3">
           <div class="input-group">
             <input
               type="text"
@@ -100,7 +100,7 @@
         <!-- Next Round Button - Only shown when game is complete -->
         <div class="text-center mb-3">
           <a
-            href="{{ url_for('hangman', difficulty=difficulty) }}"
+            href="{{ url_for('bp.hangman', difficulty=difficulty) }}"
             id="next-round-btn"
             class="btn btn-sm btn-primary"
             >Next Round!</a
@@ -112,12 +112,12 @@
         <div class="text-center mt-3 pt-3 border-top">
           <div class="btn-group">
             <a
-              href="{{ url_for('change_difficulty', difficulty=difficulty) }}"
+              href="{{ url_for('bp.change_difficulty', difficulty=difficulty) }}"
               class="btn btn-sm btn-outline-secondary"
               >Change Difficulty and Reset</a
             >
             <a
-              href="{{ url_for('restart') }}"
+              href="{{ url_for('bp.restart') }}"
               class="btn btn-sm btn-outline-danger"
               >Restart</a
             >

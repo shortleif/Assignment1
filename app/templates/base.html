@@ -6,7 +6,7 @@
     <title>{{ title|default('Pokémon Hangman') }}</title>
     <link
       rel="shortcut icon"
-      href="{{ url_for('static', filename='favicon.ico') }}"
+      href="{{ url_for('bp.static', filename='favicon.ico') }}"
     />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
@@ -16,14 +16,14 @@
     />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
+      href="{{ url_for('bp.static', filename='style.css') }}"
     />
   </head>
   <body>
     <!-- Home button as a floating element, not connected to the grid system -->
     <div class="position-fixed top-0 start-0 m-3" style="z-index: 1030">
       <a
-        href="{{ url_for('home') }}"
+        href="{{ url_for('bp.home') }}"
         class="btn btn-sm btn-dark shadow-sm"
         title="Return Home"
       >

@@ -5,8 +5,6 @@ from pathlib import Path
 # Define the blueprint
 hangman_bp = Blueprint('hangman', __name__, template_folder='templates', static_folder='static')
 
-# --- Helper Functions (Moved from main.py) ---
-
 def load_pokemon_names():
     """
     Load the list of Pokémon names from the pokemon.txt file.

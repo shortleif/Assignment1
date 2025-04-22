@@ -1,7 +1,11 @@
-from main import app
+import os
+import sys
 
-if __name__ == "__main__":
-    # This part is mainly for convenience if you ever run `python wsgi.py` directly,
-    # though typically Gunicorn will import the 'app' object directly.
-    # Use the same host/port/debug settings as your development run if needed.
-    app.run()
+# Add the current directory to Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, current_dir)
+
+from app import create_app
+
+app = create_app()
+print("Flask app Started WSGI.")
